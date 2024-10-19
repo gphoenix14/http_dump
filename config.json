@@ -1,0 +1,22 @@
+{
+    "fields": {
+        "datetime": true,
+        "ip_src": true,
+        "src_port": false,
+        "endpoint": false,
+        "payload": true,
+        "http_method": true,
+        "referer": false,
+        "user_agent": false,
+        "cookie": false
+    },
+    "output_log_directory": "./log/",
+    "models": {
+        "cmd_injection": {
+            "active": true,
+            "IP": "127.0.0.1", 
+            "porta": 5000,       
+            "endpoint": "/cmd_injection"  
+        }
+    }
+}
