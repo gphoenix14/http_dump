@@ -14,9 +14,9 @@
     "models": {
         "cmd_injection": {
             "active": true,
-            "IP": "127.0.0.1", 
-            "porta": 5000,       
-            "endpoint": "/cmd_injection"  
+            "IP": "127.0.0.1",
+            "porta": 5000,
+            "endpoint": "/cmd_injection"
         }
     }
 }
