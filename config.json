@@ -16,7 +16,7 @@
             "active": true,
             "IP": "127.0.0.1",
             "porta": 5000,
-            "endpoint": "/cmd_injection"
+            "endpoint": "/predict"
         }
     }
 }
