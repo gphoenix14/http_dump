@@ -166,6 +166,9 @@ def process_packet(packet):
                     # Preparare il JSON da inviare al modello
                     model_data = {"strings": extracted_strings}
                     
+                    # Stampa sul terminale il JSON da inviare
+                    print(f"Inviando al modello: {json.dumps(model_data, indent=4)}")
+
                     # Inviare i dati ai modelli attivi
                     for model_name, model_info in models.items():
                         if model_info.get("active", False):
