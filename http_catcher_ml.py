@@ -72,14 +72,19 @@ def estrai_payload(uri, payload, http_method):
             value = pair.split('=', 1)[1] if '=' in pair else ''
             strings.append(value)
 
-    # Estrarre i dati dal payload POST (considerando JSON)
-    elif 'POST' in http_method and payload:
+    # Estrarre i dati dal payload POST (gestendo query string)
+    elif 'POST' in http_method:
+        # Prova a interpretare il payload come JSON
         try:
             json_data = json.loads(payload)
             for value in json_data.values():
                 strings.append(value)
         except json.JSONDecodeError:
-            pass  # Non è un payload JSON valido, ignora
+            # Se non è JSON, trattalo come query string
+            pairs = payload.split('&')
+            for pair in pairs:
+                value = pair.split('=', 1)[1] if '=' in pair else ''
+                strings.append(value)
 
     return strings
 
