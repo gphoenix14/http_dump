@@ -60,6 +60,29 @@ with open(output_file, 'w', newline='') as f:
 # Pre-calcolare i campi da catturare
 capture_fields = set(csv_headers)
 
+# Funzione per estrarre il payload da una query GET o POST
+def estrai_payload(uri, payload, http_method):
+    strings = []
+    
+    # Estrarre i valori delle query GET
+    if 'GET' in http_method and '?' in uri:
+        query_params = uri.split('?', 1)[1]
+        pairs = query_params.split('&')
+        for pair in pairs:
+            value = pair.split('=', 1)[1] if '=' in pair else ''
+            strings.append(value)
+
+    # Estrarre i dati dal payload POST (considerando JSON)
+    elif 'POST' in http_method and payload:
+        try:
+            json_data = json.loads(payload)
+            for value in json_data.values():
+                strings.append(value)
+        except json.JSONDecodeError:
+            pass  # Non è un payload JSON valido, ignora
+
+    return strings
+
 # Funzione per analizzare i pacchetti HTTP
 def process_packet(packet):
     if packet.haslayer(TCP) and packet.haslayer(Raw):
@@ -137,15 +160,12 @@ def process_packet(packet):
                     # Stampa sul terminale
                     print(f"Captured HTTP request: {row}")
 
-                    # Preparare i dati per il modello
-                    model_data = {}
-                    required_fields = ["datetime", "ip_src", "payload", "http_method"]
-                    for field in required_fields:
-                        if field in row_dict:
-                            model_data[field] = row_dict[field]
-                        else:
-                            model_data[field] = ""
+                    # Estrarre il payload
+                    extracted_strings = estrai_payload(uri, post_payload, http_method)
 
+                    # Preparare il JSON da inviare al modello
+                    model_data = {"strings": extracted_strings}
+                    
                     # Inviare i dati ai modelli attivi
                     for model_name, model_info in models.items():
                         if model_info.get("active", False):
